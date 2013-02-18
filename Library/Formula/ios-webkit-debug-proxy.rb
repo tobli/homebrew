@@ -2,7 +2,8 @@ require 'formula'
 
 class IosWebkitDebugProxy < Formula
   homepage 'https://github.com/google/ios-webkit-debug-proxy'
-  head 'https://github.com/google/ios-webkit-debug-proxy.git'
+  url 'https://github.com/google/ios-webkit-debug-proxy/archive/1.0.tar.gz'
+  sha1 '2f05bdca351cb7730552a63b3825db858bf8fdd6'
 
   depends_on 'automake' => :build
   depends_on 'libimobiledevice'
@@ -11,7 +12,6 @@ class IosWebkitDebugProxy < Formula
     system "./autogen.sh"
     system "./configure", "--disable-debug", "--disable-dependency-tracking",
                           "--prefix=#{prefix}"
-    system "make"
     system "make install"
   end
 
