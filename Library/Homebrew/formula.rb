@@ -202,7 +202,8 @@ class Formula
     cc = Compiler.new(cc) unless cc.is_a? Compiler
     return self.class.cc_failures.find do |failure|
       next unless failure.compiler == cc.name
-      failure.build.zero? or failure.build >= cc.build
+      failure.build.zero? or \
+        (failure.build >= cc.build or not ARGV.homebrew_developer?)
     end
   end
 
@@ -656,6 +657,8 @@ private
     case method
     when :brew
       raise "You cannot override Formula#brew"
+    when :patch
+      raise "You probably meant `def patches`."
     when :test
       @test_defined = true
     end
@@ -722,7 +725,6 @@ private
     end
 
     def version val=nil
-      return @version if val.nil?
       @stable ||= SoftwareSpec.new
       @stable.version(val)
     end
