@@ -62,7 +62,7 @@ class Formula
     end
 
     def version_for_sha sha
-      mktemp do
+      mktemp name do
         path = Pathname.new(Pathname.pwd+"#{name}.rb")
         path.write text_from_sha(sha)
 

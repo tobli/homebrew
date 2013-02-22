@@ -596,7 +596,7 @@ public
 
   def test
     ret = nil
-    mktemp do
+    mktemp name do
       @testpath = Pathname.pwd
       ret = instance_eval(&self.class.test)
       @testpath = nil
@@ -613,7 +613,7 @@ private
   def stage
     fetched, downloader = fetch
     verify_download_integrity fetched if fetched.kind_of? Pathname
-    mktemp do
+    mktemp name do
       downloader.stage
       # Set path after the downloader changes the working folder.
       @buildpath = Pathname.pwd
