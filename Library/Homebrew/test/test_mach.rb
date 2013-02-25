@@ -1,7 +1,7 @@
 require 'testing_env'
 
 def file pn
-  `/usr/bin/file -h '#{pn}'`.chomp
+  `/usr/bin/file -b '#{pn}'`.chomp
 end
 
 class MachOPathnameTests < Test::Unit::TestCase
@@ -16,7 +16,7 @@ class MachOPathnameTests < Test::Unit::TestCase
     assert !pn.mach_o_executable?
     assert !pn.text_executable?
     assert pn.arch == :universal
-    assert_match /Mach-O (64-bit )?dynamically linked shared library/, file(pn)
+    assert_match /Mach-O universal binary with 2 architectures/, file(pn)
   end
 
   def test_i386_dylib
@@ -30,7 +30,7 @@ class MachOPathnameTests < Test::Unit::TestCase
     assert !pn.mach_o_executable?
     assert !pn.text_executable?
     assert !pn.mach_o_bundle?
-    assert_match /Mach-O dynamically linked shared library/, file(pn)
+    assert_match /Mach-O dynamically linked shared library i386/, file(pn)
   end
 
   def test_x86_64_dylib
@@ -44,7 +44,7 @@ class MachOPathnameTests < Test::Unit::TestCase
     assert !pn.mach_o_executable?
     assert !pn.text_executable?
     assert !pn.mach_o_bundle?
-    assert_match /Mach-O 64-bit dynamically linked shared library/, file(pn)
+    assert_match /Mach-O 64-bit dynamically linked shared library x86_64/, file(pn)
   end
 
   def test_mach_o_executable
@@ -58,7 +58,7 @@ class MachOPathnameTests < Test::Unit::TestCase
     assert pn.mach_o_executable?
     assert !pn.text_executable?
     assert !pn.mach_o_bundle?
-    assert_match /Mach-O (64-bit )?executable/, file(pn)
+    assert_match /Mach-O universal binary with 2 architectures/, file(pn)    
   end
 
   def test_fat_bundle
@@ -72,7 +72,7 @@ class MachOPathnameTests < Test::Unit::TestCase
     assert !pn.mach_o_executable?
     assert !pn.text_executable?
     assert pn.mach_o_bundle?
-    assert_match /Mach-O (64-bit )?bundle/, file(pn)
+    assert_match /Mach-O fat file with 2 architectures/, file(pn)
   end
 
   def test_i386_bundle
