@@ -38,6 +38,7 @@ begin
     t.output_dir = TEST_DIRECTORY+'coverage'
   end
 rescue LoadError
+  puts "Test coverage aborted, unable to run rcov."
 end
 
 begin
@@ -52,4 +53,5 @@ begin
     t.min_percent = 2
   end
 rescue LoadError
+  puts "Test profiling aborted, unable to run ruby-prof."
 end
