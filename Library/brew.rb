@@ -1,7 +1,9 @@
 #!/System/Library/Frameworks/Ruby.framework/Versions/1.8/usr/bin/ruby -W0
 # -*- coding: utf-8 -*-
 
-std_trap = trap("INT") { exit! 130 } # no backtrace thanks
+unless ENV['TRAVIS'] == "true"
+  std_trap = trap("INT") { exit! 130 } # no backtrace thanks
+end
 
 HOMEBREW_BREW_FILE = ENV['HOMEBREW_BREW_FILE']
 HOMEBREW_BREW_FILE = ENV['HOMEBREW_BREW_FILE'] ||= File.expand_path(__FILE__)
@@ -57,7 +59,9 @@ rescue LoadError => e
 end
 
 begin
-  trap("INT", std_trap) # restore default CTRL-C handler
+  unless ENV['TRAVIS'] == "true"
+    trap("INT", std_trap) # restore default CTRL-C handler
+  end
 
   aliases = {'ls' => :list,
              'homepage' => :home,
