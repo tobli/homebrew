@@ -3,7 +3,7 @@ require 'test/testball'
 
 class CompilerTests < Test::Unit::TestCase
   def setup
-    %w{HOMEBREW_USE_CLANG HOMEBREW_USE_LLVM HOMEBREW_USE_GCC}.each { |v| ENV.delete(v) }
+    %w{HOMEBREW_USE_CLANG HOMEBREW_USE_LLVM HOMEBREW_USE_GCC HOMEBREW_DEVELOPER}.each { |v| ENV.delete(v) }
   end
 
   def teardown
@@ -43,12 +43,9 @@ class CompilerTests < Test::Unit::TestCase
     f = TestNoCompilerFailures.new
     cs = CompilerSelector.new(f)
 
-    assert !(f.fails_with? :clang)
-    assert !(f.fails_with? :llvm)
-    assert case MacOS.gcc_42_build_version
-      when nil then f.fails_with? :gcc
-      else !(f.fails_with? :gcc)
-      end
+    assert f.fails_with? :clang
+    assert f.fails_with? :llvm
+    assert f.fails_with? :gcc
 
     cs.select_compiler
 
@@ -60,25 +57,25 @@ class CompilerTests < Test::Unit::TestCase
     cs = CompilerSelector.new(f)
 
     assert f.fails_with? :clang
-    assert !(f.fails_with? :llvm)
+    assert f.fails_with? :llvm
     assert f.fails_with? :gcc
 
     cs.select_compiler
 
-    assert_equal :llvm, ENV.compiler
+    assert_equal MacOS.default_compiler, ENV.compiler
   end
 
   def test_more_mixed_compiler_failures
     f = TestMoreMixedCompilerFailures.new
     cs = CompilerSelector.new(f)
 
-    assert !(f.fails_with? :clang)
+    assert f.fails_with? :clang
     assert f.fails_with? :llvm
     assert f.fails_with? :gcc
 
     cs.select_compiler
 
-    assert_equal :clang, ENV.compiler
+    assert_equal MacOS.default_compiler, ENV.compiler
   end
 
   def test_even_more_mixed_compiler_failures
@@ -110,6 +107,6 @@ class CompilerTests < Test::Unit::TestCase
 
     cs.select_compiler
 
-    assert_equal MacOS.default_compiler, ENV.compiler
+    assert_equal :llvm, ENV.compiler
   end
 end

@@ -19,6 +19,11 @@ class DependencyCollector
     :chicken, :jruby, :lua, :node, :ocaml, :perl, :python, :rbx, :ruby
   ].freeze
 
+  SPECIAL_DEPENDENCIES = [
+    :autoconf, :automake, :bsdmake, :libtool, :libltdl,
+        :cairo, :pixman, :x11, :xcode, :mysql, :postgresql, :tex, :clt
+    ] << X11Dependency::Proxy::PACKAGES
+
   attr_reader :deps, :requirements
 
   def initialize
@@ -52,7 +57,9 @@ private
     when Symbol
       parse_symbol_spec(spec, tag)
     when String
-      if LANGUAGE_MODULES.include? tag
+      if SPECIAL_DEPENDENCIES.include? spec.to_sym
+        parse_symbol_spec(spec.to_sym, tag) 
+      elsif LANGUAGE_MODULES.include? tag
         LanguageModuleDependency.new(tag, spec)
       else
         Dependency.new(spec, tag)

@@ -110,6 +110,13 @@ class DependencyCollectorTests < Test::Unit::TestCase
     MacOS.stubs(:version).returns(MacOS::Version.new(10.7))
     assert_equal X11Dependency::Proxy.new(:libpng), @d.build(:libpng)
   end
+
+  def test_string_and_symbols_as_dependencies
+    @d.add 'postgresql'
+    @d.add :postgresql
+    assert_equal 1, @d.requirements.length
+    assert_equal 'postgresql', @d.requirements.first.name
+  end
 end
 
 class LanguageModuleDependencyTests < Test::Unit::TestCase

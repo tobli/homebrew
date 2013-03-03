@@ -98,11 +98,7 @@ class CompilerSelector
     # @compilers is our list of available compilers. If @f declares a
     # failure with compiler foo, then we remove foo from the list if
     # the failing build is >= the currently installed version of foo.
-    @compilers = @compilers.reject do |cc|
-      failure = @f.fails_with? cc
-      next unless failure
-      failure.build >= cc.build or not ARGV.homebrew_developer?
-    end
+    @compilers = @compilers.reject { |cc| @f.fails_with? cc }
 
     return if @compilers.empty? or @compilers.include? ENV.compiler
 
