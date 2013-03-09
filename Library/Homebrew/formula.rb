@@ -39,7 +39,7 @@ class Formula
     # Ensure the bottle URL is set. If it does not have a checksum,
     # then a bottle is not available for the current platform.
     if @bottle and not (@bottle.checksum.nil? or @bottle.checksum.empty?)
-      @bottle.url ||= bottle_base_url + bottle_filename(self)
+      @bottle.url ||= bottle_url(self)
       if @bottle.cat_without_underscores
         @bottle.url.gsub!(MacOS.cat.to_s, MacOS.cat_without_underscores.to_s)
       end
@@ -202,7 +202,8 @@ class Formula
     cc = Compiler.new(cc) unless cc.is_a? Compiler
     return self.class.cc_failures.find do |failure|
       next unless failure.compiler == cc.name
-      failure.build.zero? or failure.build >= cc.build
+      failure.build.zero? or \
+        (failure.build >= cc.build or not ARGV.homebrew_developer?)
     end
   end
 
@@ -477,7 +478,7 @@ class Formula
       "homepage" => homepage,
       "versions" => {
         "stable" => (stable.version.to_s if stable),
-        "bottle" => bottle && MacOS.bottles_supported? || false,
+        "bottle" => bottle || false,
         "devel" => (devel.version.to_s if devel),
         "head" => (head.version.to_s if head)
       },
@@ -722,7 +723,6 @@ private
     end
 
     def version val=nil
-      return @version if val.nil?
       @stable ||= SoftwareSpec.new
       @stable.version(val)
     end
