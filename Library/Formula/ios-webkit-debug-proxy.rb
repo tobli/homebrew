@@ -21,6 +21,7 @@ class IosWebkitDebugProxy < Formula
 
   def patches
     # Fix compilation with clang
+    # Upstream patch tracked by https://github.com/google/ios-webkit-debug-proxy/pull/4
     DATA
   end
 
