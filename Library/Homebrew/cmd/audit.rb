@@ -173,7 +173,7 @@ class FormulaAuditor
       problem "The homepage should start with http or https (url is #{f.homepage})."
     end
 
-    # Check for http:// urls; https:// is preferred.
+    # Check for http:// GitHub homepage urls, https:// is preferred.
     if f.homepage =~ %r[^http://([^/])*github\.com/]
       problem "Use https:// URLs for homepages on GitHub (url is #{f.homepage})."
     end
@@ -220,12 +220,12 @@ class FormulaAuditor
       end
     end
 
-    # Check for git:// urls; https:// is preferred.
+    # Check for git:// GitHub repo urls, https:// is preferred.
     urls.select { |u| u =~ %r[^git://([^/])*github\.com/] }.each { |u|
       problem "Use https:// URLs for accessing GitHub repositories (url is #{u})."
     } 
 
-    # Check for http:// urls to github repos; https:// is preferred.
+    # Check for http:// GitHub repo urls, https:// is preferred.
     urls.select { |u| u =~ %r[^http://github\.com/.*\.git$] }.each { |u|
       problem "Use https:// URLs for accessing GitHub repositories (url is #{u})."
     } 
