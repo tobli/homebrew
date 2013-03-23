@@ -370,7 +370,7 @@ module HomebrewEnvExtension
     if self['HOMEBREW_MAKE_JOBS'].to_i > 0
       self['HOMEBREW_MAKE_JOBS'].to_i
     else
-      Hardware.processor_count
+      Hardware::CPU.cores
     end
   end
 end
