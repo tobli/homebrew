@@ -100,8 +100,10 @@ class FormulaAuditor
   end
 
   def audit_file
-    unless f.path.stat.mode.to_s(8) == "100644"
-      problem "Incorrect file permissions (#{f.path.stat.mode.to_s(8)}). Run chmod 644 #{f.path}"
+    unless ENV['TRAVIS'] == "true"
+      unless f.path.stat.mode.to_s(8) == "100644"
+        problem "Incorrect file permissions (#{f.path.stat.mode.to_s(8)}). Run chmod 644 #{f.path}"
+      end
     end
 
     if f.text.has_DATA? and not f.text.has_END?
