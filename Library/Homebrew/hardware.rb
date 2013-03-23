@@ -39,12 +39,12 @@ class Hardware
   end
 
   def self.cores_as_words
-    case Hardware.processor_count
+    case CPU.cores
     when 1 then 'single'
     when 2 then 'dual'
     when 4 then 'quad'
     else
-      Hardware.processor_count
+      CPU.cores
     end
   end
 end
