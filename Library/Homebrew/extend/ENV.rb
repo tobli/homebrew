@@ -137,17 +137,21 @@ module HomebrewEnvExtension
     self['OBJCXX'] = self['CXX']
   end
 
-  def gcc
+  def gcc_4_2
+    gcc "gcc-4.2" "g++-4.2"
+  end
+
+  def gcc (gcc_name='gcc', gpp_name='g++')
     # Apple stopped shipping gcc-4.2 with Xcode 4.2
     # However they still provide a gcc symlink to llvm
     # But we don't want LLVM of course.
 
-    self['CC'] = self['OBJC'] = MacOS.locate("gcc-4.2")
-    self['CXX'] = self['OBJCXX'] = MacOS.locate("g++-4.2")
+    self['CC'] = self['OBJC'] = MacOS.locate(gcc_name)
+    self['CXX'] = self['OBJCXX'] = MacOS.locate(gpp_name)
 
     unless self['CC']
-      self['CC'] = self['OBJC'] = "#{HOMEBREW_PREFIX}/bin/gcc-4.2"
-      self['CXX'] = self['OBJCXX'] = "#{HOMEBREW_PREFIX}/bin/g++-4.2"
+      self['CC'] = self['OBJC'] = "#{HOMEBREW_PREFIX}/bin/#{gcc_name}"
+      self['CXX'] = self['OBJCXX'] = "#{HOMEBREW_PREFIX}/bin/#{gpp_name}"
       raise "GCC could not be found" unless File.exist? self['CC']
     end
 
@@ -159,7 +163,6 @@ module HomebrewEnvExtension
     set_cpu_cflags '-march=core2 -msse4', Hardware::CPU.optimization_flags
     @compiler = :gcc
   end
-  alias_method :gcc_4_2, :gcc
 
   def llvm
     self['CC'] = self['OBJC'] = MacOS.locate("llvm-gcc")
