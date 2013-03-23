@@ -101,7 +101,7 @@ class FormulaAuditor
 
   def audit_file
     unless f.path.stat.mode.to_s(8) == "100644"
-      problem "Incorrect file permissions: chmod 644 #{f.path}"
+      problem "Incorrect file permissions (#{f.path.stat.mode.to_s(8)}). Run chmod 644 #{f.path}"
     end
 
     if f.text.has_DATA? and not f.text.has_END?
