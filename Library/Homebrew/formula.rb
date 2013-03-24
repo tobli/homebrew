@@ -200,7 +200,7 @@ class Formula
   def fails_with? cc
     cc = Compiler.new(cc) unless cc.is_a? Compiler
     (self.class.cc_failures || []).any? do |failure|
-      failure.compiler == cc.name && failure.build >= cc.build
+      failure.compiler == cc.name && cc.build && failure.build >= cc.build
     end
   end
 
