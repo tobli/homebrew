@@ -4,7 +4,7 @@ class Compiler < Struct.new(:name, :priority)
     when :clang, :llvm
       MacOS.send("#{name}_build_version")
     when :gcc
-      MacOS.gcc_42_build_version
+      MacOS.gcc_build_version
     end
   end
 end

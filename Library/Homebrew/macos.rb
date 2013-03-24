@@ -130,6 +130,14 @@ module MacOS extend self
     end
   end
 
+  def gcc_build_version
+    @gcc_build_version ||= if locate("gcc") \
+      and not locate("gcc").realpath.basename.to_s =~ /^llvm/
+      `#{locate("gcc")} --version` =~ /build (\d{4,})/
+      $1.to_i
+    end
+  end
+
   def llvm_build_version
     # for Xcode 3 on OS X 10.5 this will not exist
     # NOTE may not be true anymore but we can't test

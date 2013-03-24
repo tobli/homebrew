@@ -31,7 +31,7 @@ class CompilerTests < Test::Unit::TestCase
 
     assert !(f.fails_with? :clang)
     assert !(f.fails_with? :llvm)
-    assert case MacOS.gcc_42_build_version
+    assert case MacOS.gcc_build_version
       when nil then f.fails_with? :gcc
       else !(f.fails_with? :gcc)
       end
@@ -64,11 +64,11 @@ class CompilerTests < Test::Unit::TestCase
 
     assert f.fails_with? :clang
     assert f.fails_with? :llvm
-    assert case MacOS.gcc_42_build_version
+    assert case MacOS.gcc_build_version
       when nil then f.fails_with? :gcc
       else !(f.fails_with? :gcc)
       end
-    assert_equal case MacOS.gcc_42_build_version
+    assert_equal case MacOS.gcc_build_version
       when nil then :llvm
       else :gcc
       end, cs.compiler
