@@ -59,7 +59,7 @@ class X11Dependency < Requirement
 
   fatal true
 
-  env { x11 }
+  env { ENV.x11 }
 
   def initialize(name="x11", *tags)
     tags.flatten!
@@ -179,11 +179,11 @@ class MPIDependency < Requirement
     @unknown_langs.empty? and @non_functional.empty?
   end
 
-  env do |req|
+  env do
     # Set environment variables to help configure scripts find MPI compilers.
     # Variable names taken from:
     # http://www.gnu.org/software/autoconf-archive/ax_mpi.html
-    req.lang_list.each do |lang|
+    @lang_list.each do |lang|
       compiler = 'mpi' + lang.to_s
       mpi_path = which compiler
 
@@ -325,14 +325,32 @@ class CLTDependency < Requirement
   fatal true
   build true
 
-  def satisfied?
-    MacOS::CLT.installed?
-  end
+  satisfy(:build_env => false) { MacOS::CLT.installed? }
 
   def message; <<-EOS.undent
     The Command Line Tools for Xcode are required to compile this software.
     The standalone package can be obtained from http://connect.apple.com,
     or it can be installed via Xcode's preferences.
+    EOS
+  end
+end
+
+class ArchRequirement < Requirement
+  fatal true
+
+  def initialize(arch)
+    @arch = arch
+    super
+  end
+
+  satisfy do
+    case @arch
+    when :x86_64 then MacOS.prefer_64_bit?
+    end
+  end
+
+  def message; <<-EOS.undent
+    This formula requires an #{@arch} architecture.
     EOS
   end
 end

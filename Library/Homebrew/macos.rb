@@ -129,6 +129,7 @@ module MacOS extend self
       $1.to_i
     end
   end
+  alias_method :gcc_build_version, :gcc_42_build_version
 
   def gcc_build_version
     @gcc_build_version ||= if locate("gcc") \
