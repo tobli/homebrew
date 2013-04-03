@@ -115,9 +115,7 @@ def install f
   end
 
   if f.fails_with? ENV.compiler
-    cs = CompilerSelector.new f
-    cs.select_compiler
-    cs.advise
+    ENV.send CompilerSelector.new(f, ENV.compiler).compiler
   end
 
   f.brew do
