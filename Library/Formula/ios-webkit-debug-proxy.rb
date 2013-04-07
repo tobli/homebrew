@@ -1,30 +1,37 @@
 require 'formula'
 
+class LionOrNewer < Requirement
+  fatal true
+
+  satisfy MacOS.version >= :lion
+
+  def message
+    "ios-webkit-debug-proxy requires Mac OS X 10.7 (Lion) or newer."
+  end
+end
+
 class IosWebkitDebugProxy < Formula
   homepage 'https://github.com/google/ios-webkit-debug-proxy'
   url 'https://github.com/google/ios-webkit-debug-proxy/archive/1.0.tar.gz'
   sha1 '2f05bdca351cb7730552a63b3825db858bf8fdd6'
 
-  depends_on 'automake' => :build
+  depends_on LionOrNewer
+  depends_on :autoconf => :build
+  depends_on :automake => :build
+  depends_on 'libplist'
+  depends_on 'usbmuxd'
   depends_on 'libimobiledevice'
+
+  # Patch from upstream to fix compiling with clang
+  # Can be removed in next release.
+  def patches; DATA; end
 
   def install
     system "./autogen.sh"
-    system "./configure", "--disable-debug", "--disable-dependency-tracking",
+    system "./configure", "--disable-dependency-tracking",
                           "--prefix=#{prefix}"
     system "make install"
   end
-
-  def test
-    system "ios_webkit_debug_proxy -h"
-  end
-
-  def patches
-    # Fix compilation with clang
-    # Upstream patch tracked by https://github.com/google/ios-webkit-debug-proxy/pull/4
-    DATA
-  end
-
 end
 
 __END__
@@ -41,4 +48,3 @@ index e2f8f3c..c65180c 100644
    }
  
    iwdpm_create_bridge(self);
-
