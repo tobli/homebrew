@@ -28,4 +28,8 @@ class IosWebkitDebugProxy < Formula
                           "--prefix=#{prefix}"
     system "make install"
   end
+
+  test do
+    system "ios_webkit_debug_proxy -h"
+  end
 end
