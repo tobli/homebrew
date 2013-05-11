@@ -30,7 +30,7 @@ class DependencyCollectorTests < Test::Unit::TestCase
   end
 
   def test_dependency_tags
-    assert Dependency.new('foo', :build).build?
+    assert Dependency.new('foo', [:build]).build?
     assert Dependency.new('foo', [:build, :optional]).optional?
     assert Dependency.new('foo', [:universal]).options.include? '--universal'
     assert_empty Dependency.new('foo').tags
@@ -111,10 +111,11 @@ class DependencyCollectorTests < Test::Unit::TestCase
     assert_equal X11Dependency::Proxy.new(:libpng), @d.build(:libpng)
   end
 
-  def test_string_and_symbols_as_dependencies
-    @d.add 'postgresql'
-    @d.add :postgresql
-    assert_equal 1, @d.requirements.length
-    assert_equal 'postgresql', @d.requirements.first.name
+  def test_raises_typeerror_for_unknown_classes
+    assert_raises(TypeError) { @d.add(Class.new) }
+  end
+
+  def test_raises_typeerror_for_unknown_types
+    assert_raises(TypeError) { @d.add(Object.new) }
   end
 end
